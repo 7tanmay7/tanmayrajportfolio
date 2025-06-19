@@ -1,165 +1,345 @@
-*{
+/* Import Poppins font (from your original CSS) */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* --- Custom CSS Variables (Inspired by Profile Card) --- */
+:root {
+    --bg-body: #0a0a0a; /* Deep dark background */
+    --bg-section: #1a1a1a; /* Slightly lighter for sections */
+    --bg-card: #282828; /* Even lighter for cards/boxes */
+    --text-primary: #ffffff; /* Main text color */
+    --text-secondary: #e0e0e0; /* Sub-text/paragraph color */
+    --text-muted: #b0b0b0; /* Less important text */
+    --accent-color: #00e6b8; /* Vibrant Teal (replacing greenyellow) */
+    --accent-dark: #00b38c; /* Darker teal for subtle contrasts */
+    --border-color: #333333; /* For subtle borders */
+    --shadow-light: rgba(0, 230, 184, 0.2); /* Light glow shadow */
+    --shadow-strong: rgba(0, 230, 184, 0.5); /* Stronger glow shadow */
+    --transition-speed: 0.3s;
+
+    /* For Header Name Glowing Effect */
+    --name-glow-x: 50%;
+    --name-glow-y: 50%;
+    --name-glow-opacity: 0; /* Hidden by default */
+}
+
+/* --- Global Styles --- */
+* {
     margin: 0;
     padding: 0;
     font-family: 'Poppins', sans-serif;
     box-sizing: border-box;
 }
 
-
-html{
+html {
     scroll-behavior: smooth;
 }
 
-
-body{
-    background: black;
-    color: white;
+body {
+    background: var(--bg-body);
+    color: var(--text-primary);
+    line-height: 1.6; /* Improved readability */
 }
 
-#header{
-    width: 100%;
-    height: 100vh;
-    background-image: url(images/back.png);
-    background-attachment: fixed;
-    background-size: cover;
-    background-position: center;
-}
-
-
-.container{
+.container {
     padding: 10px 10%;
 }
 
-nav{
+/* --- Header Section --- */
+#header {
+    width: 100%;
+    height: 100vh;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(images/back.png); /* Dark overlay + your image */
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    display: flex; /* Use flex to center content vertically */
+    align-items: center;
+}
+
+nav {
     display: flex;
-    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-
+    width: 100%;
+    padding: 20px 0; /* Add padding to nav for better spacing */
+    position: absolute; /* Position nav absolutely within header */
+    top: 0;
+    left: 0;
+    padding: 10px 10%;
+    z-index: 1000; /* Ensure nav is on top */
 }
 
+.logo {
+    width: 140px;
+    filter: brightness(1.1); /* Slightly brighter logo */
+}
 
-nav ul li{
-    display: inline-block;
+nav ul {
     list-style: none;
-    margin: 10px 20px;
+    display: flex; /* Use flex for nav items */
 }
 
-nav ul li a{
+nav ul li {
+    margin: 0 20px;
+}
+
+nav ul li a {
     text-decoration: none;
-    color: white;
+    color: var(--text-primary);
     font-size: 18px;
     position: relative;
+    padding-bottom: 5px; /* Space for the underline */
+    transition: color var(--transition-speed) ease;
 }
 
-nav ul li a::after{
+/* Nav Link Underline Effect */
+nav ul li a::after {
     content: "";
     width: 0;
     height: 3px;
-    background: greenyellow;
+    background: var(--accent-color);
     position: absolute;
     left: 0;
-    bottom: -11px;
-    transition: 0.35s;
-    
+    bottom: -5px; /* Adjusted to be closer */
+    transition: width var(--transition-speed) ease;
 }
-nav ul li a:hover::after{
+
+nav ul li a:hover::after {
     width: 100%;
 }
 
-
-.logo{
-    width: 140px;
+nav ul li a:hover {
+    color: var(--accent-color); /* Change text color on hover */
 }
 
-.header-text{
-    margin-top: 20%;
+
+.header-text {
+    /* Adjusted to center content within the flex container (#header) */
+    text-align: left;
+    margin-top: 0; /* Remove original margin-top as flex handles alignment */
     font-size: 30px;
+    padding-top: 50px; /* Add some padding from the top if needed */
 }
 
-.header-text h1{
+.header-text h1 {
     font-size: 60px;
-    margin-top: 20px;
+    margin-top: 10px;
+    font-weight: 700;
 }
 
-.header-text span{
-    color: greenyellow;
+/* Name Glow Effect (Inspired by Profile Card) */
+.header-text h1 span {
+    color: transparent; /* Text itself is transparent */
+    background-image:
+        radial-gradient(
+            circle 80px at var(--name-glow-x) var(--name-glow-y), /* Moving glow controlled by JS */
+            var(--shadow-light), /* Light glow start */
+            transparent
+        ),
+        linear-gradient(
+            to right,
+            var(--accent-color), /* Strong accent color */
+            var(--accent-color),
+            var(--text-primary) 70% /* Blends into white */
+        );
+    background-size: 160px 160px, auto;
+    background-position: var(--name-glow-x) var(--name-glow-y), 0 0;
+    background-repeat: no-repeat, repeat;
+    background-blend-mode: screen, normal; /* Screen blend for glow */
+    -webkit-background-clip: text;
+    background-clip: text;
+    text-shadow: 0 0 15px var(--shadow-strong); /* Base strong glow */
+    transition: --name-glow-opacity var(--transition-speed) ease-out;
+    cursor: default; /* Not clickable */
 }
 
-/* about */
+/* Add a class by JS when mouse enters header-text h1 */
+.header-text h1 span.glowing {
+    --name-glow-opacity: 1; /* Make glow fully visible */
+}
 
-#about{
+/* --- New: Why Work With Me Section in Header --- */
+.why-work-with-me {
+    margin-top: 40px; /* Space from the main heading */
+    max-width: 500px; /* Control width for readability */
+}
+
+.why-work-with-me h2 {
+    font-size: 28px;
+    color: var(--accent-color); /* Accent color for the sub-heading */
+    margin-bottom: 20px;
+    font-weight: 600;
+    position: relative;
+    padding-bottom: 5px;
+}
+
+.why-work-with-me h2::after {
+    content: '';
+    width: 50px; /* Short underline */
+    height: 3px;
+    background: var(--accent-dark);
+    position: absolute;
+    left: 0;
+    bottom: 0;
+}
+
+.why-work-with-me ul {
+    list-style: none; /* Remove default list bullets */
+    padding: 0;
+}
+
+.why-work-with-me ul li {
+    font-size: 18px;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    display: flex; /* Align icon and text */
+    align-items: center;
+}
+
+.why-work-with-me ul li i {
+    color: var(--accent-color); /* Color for checkmark icons */
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+/* --- About Section --- */
+#about {
     padding: 80px 0;
-    color: #ababab;
+    color: var(--text-secondary);
+    background: var(--bg-section); /* Section background */
 }
 
-.row{
+.row {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
 }
 
-.about-col-1{
+.about-col-1 {
     flex-basis: 35%;
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px; /* Match image border-radius */
 }
 
-.about-col-1 img{
+.about-col-1 img {
     width: 100%;
     border-radius: 15px;
+    display: block; /* Remove extra space below image */
+    transition: transform var(--transition-speed) ease;
 }
 
-.about-col-2{
+.about-col-1:hover img {
+    transform: scale(1.05); /* Slight zoom on hover */
+}
+
+.about-col-1::before {
+    content: '';
+    position: absolute;
+    top: -5px; bottom: -5px; left: -5px; right: -5px;
+    border-radius: 20px; /* Slightly larger border radius for glow */
+    background: radial-gradient(circle at center, var(--accent-color) 0%, transparent 70%);
+    filter: blur(15px);
+    opacity: 0;
+    transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease;
+    z-index: -1; /* Behind the image */
+}
+
+.about-col-1:hover::before {
+    opacity: 0.5;
+    transform: scale(1.05);
+}
+
+.about-col-2 {
     flex-basis: 60%;
 }
 
-.sub-title{
+/* Section Sub-Title (with expanding underline "arrow" effect) */
+.sub-title {
     font-size: 60px;
     font-weight: 600;
-    color: white;
+    color: var(--text-primary);
+    position: relative;
+    display: inline-block; /* Essential for text width calculation of ::after */
+    padding-bottom: 10px; /* Space for the underline */
+    margin-bottom: 30px; /* Space below title */
+    transition: color var(--transition-speed) ease;
 }
 
-.tab-titles{
+.sub-title:hover {
+    color: var(--accent-color); /* Change color on hover */
+}
+
+.sub-title::after {
+    content: "";
+    width: 0;
+    height: 4px; /* Thicker line */
+    background: var(--accent-color);
+    border-radius: 2px;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    transition: width var(--transition-speed) ease-out;
+}
+
+.sub-title:hover::after {
+    width: 100%;
+}
+
+.tab-titles {
     display: flex;
     margin: 20px 0 40px;
+    border-bottom: 1px solid var(--border-color); /* Subtle separator */
 }
 
-.tab-links{
+.tab-links {
     margin-right: 50px;
     font-size: 24px;
     font-weight: 500;
     cursor: pointer;
-    position: relative
+    position: relative;
+    padding-bottom: 10px;
+    color: var(--text-muted); /* Default color */
+    transition: color var(--transition-speed) ease;
 }
 
-.tab-links::after{
+.tab-links:hover {
+    color: var(--text-primary); /* Darker on hover */
+}
+
+/* Active Tab Underline */
+.tab-links::after {
     content: "";
     width: 0;
     height: 3px;
-    background: greenyellow;
+    background: var(--accent-color);
     position: absolute;
     left: 0;
-    bottom: -8px;
-    transition: 0.5s;
-}
-.tab-links.active-links::after{
-   width: 100%;
+    bottom: -1px; /* Adjusted to sit on the border */
+    transition: width var(--transition-speed) ease;
 }
 
-
-.tab-links.active-links{
-   color: white;
-   transition: 0.7s;
+.tab-links.active-link::after {
+    width: 100%;
 }
 
+/* Active Tab Text Color */
+.tab-links.active-link {
+    color: var(--text-primary); /* Active link is white */
+}
 
-.tab-contents ul li{
+.tab-contents ul li {
     list-style: none;
-    margin: 10px 0;
+    margin: 15px 0;
+    font-size: 1.05em;
 }
 
-.tab-contents ul li span{
-    color: greenyellow;
-    font-size: 17px;
+.tab-contents ul li span {
+    color: var(--accent-color);
+    font-weight: 600;
+    font-size: 18px; /* Slightly larger for emphasis */
+    display: block; /* Make span a block for better spacing */
+    margin-bottom: 5px;
 }
 
 
@@ -169,4 +349,529 @@ nav ul li a:hover::after{
 
 .active-tab{
     display: block;
+}
+
+
+/* --- Services Section --- */
+#services {
+    padding: 80px 0;
+    background: var(--bg-body); /* Body background */
+}
+
+.services-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
+    grid-gap: 40px; /* Space between cards */
+    margin-top: 50px;
+}
+
+.services-list div {
+    background: var(--bg-card);
+    padding: 40px;
+    font-size: 14px;
+    font-weight: 300;
+    border-radius: 15px;
+    transition: background 0.5s, transform 0.5s, box-shadow 0.5s;
+    border: 1px solid var(--border-color); /* Subtle border */
+    position: relative;
+    overflow: hidden;
+}
+
+.services-list div i {
+    font-size: 50px;
+    margin-bottom: 25px;
+    color: var(--accent-color);
+}
+
+.services-list div h2 {
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 15px;
+    color: var(--text-primary);
+}
+
+.services-list div p {
+    text-align: justify;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+}
+
+.services-list div a {
+    text-decoration: none;
+    color: var(--accent-color); /* Consistent accent color */
+    font-size: 16px;
+    margin-top: 20px;
+    display: inline-block;
+    transition: color var(--transition-speed) ease;
+}
+
+.services-list div a:hover {
+    color: var(--text-primary); /* Text color on hover */
+    letter-spacing: 0.5px; /* Subtle text expansion */
+}
+
+/* Service Card Hover Effect */
+.services-list div:hover {
+    background: var(--accent-dark); /* Slightly darker accent on hover */
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px var(--shadow-strong); /* Stronger shadow */
+    border-color: var(--accent-color); /* Accent border on hover */
+}
+
+.services-list div:hover i,
+.services-list div:hover h2,
+.services-list div:hover p,
+.services-list div:hover a {
+    color: var(--text-primary); /* Change text/icon color to white on hover */
+}
+
+/* --- Portfolio Section --- */
+#portfolio {
+    padding: 80px 0;
+    background: var(--bg-section);
+}
+
+.work-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-gap: 40px;
+    margin-top: 50px;
+}
+
+.work {
+    border-radius: 15px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg-card); /* Background for work item itself */
+    border: 1px solid var(--border-color);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+    transition: transform var(--transition-speed) ease;
+}
+
+.work:hover {
+    transform: translateY(-10px);
+}
+
+.work img {
+    width: 100%;
+    display: block;
+    border-radius: 15px; /* Match work border-radius */
+    transition: transform var(--transition-speed) ease;
+}
+
+/* Layer effect for portfolio items */
+.work .layer {
+    width: 100%;
+    height: 0; /* Starts hidden */
+    background: linear-gradient(rgba(0, 0, 0, 0.6), var(--accent-dark)); /* Darker gradient */
+    border-radius: 15px;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 20px;
+    text-align: center;
+    transition: height 0.5s;
+    opacity: 0; /* Start invisible */
+}
+
+.work:hover .layer {
+    height: 100%;
+    opacity: 1; /* Fade in */
+}
+
+.work .layer h3 {
+    font-weight: 500;
+    margin-bottom: 10px;
+    font-size: 24px;
+    color: var(--text-primary);
+}
+
+.work .layer p {
+    color: var(--text-secondary);
+    font-size: 15px;
+    margin-bottom: 20px;
+    text-align: left; /* Keep lists readable */
+}
+
+.work .layer ul {
+    list-style: disc; /* Use standard list bullets */
+    padding-left: 20px;
+    margin-bottom: 15px;
+}
+
+.work .layer ul li {
+    font-size: 0.9em;
+    padding-bottom: 8px;
+    color: var(--text-secondary);
+}
+
+/* Icon in layer */
+.work .layer a {
+    margin-top: 20px;
+    color: var(--accent-color);
+    text-decoration: none;
+    font-size: 18px; /* Slightly smaller for icon */
+    line-height: 40px;
+    background: var(--text-primary); /* White circle background */
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    text-align: center;
+    transition: background 0.3s, color 0.3s, transform 0.3s;
+}
+
+.work .layer a:hover {
+    background: var(--accent-color); /* Accent background on hover */
+    color: var(--text-primary); /* White icon on hover */
+    transform: rotate(360deg); /* Spin effect */
+}
+
+.btn {
+    display: block;
+    margin: 50px auto;
+    width: fit-content;
+    border: 1px solid var(--accent-color);
+    padding: 14px 50px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--accent-color);
+    transition: background 0.5s, color 0.5s, box-shadow 0.5s;
+    font-weight: 500;
+}
+
+.btn:hover {
+    background: var(--accent-color);
+    color: var(--bg-body); /* Dark text on hover */
+    box-shadow: 0 0 20px var(--shadow-strong);
+}
+
+/* --- Contact Section --- */
+#contact {
+    padding: 80px 0;
+    background: var(--bg-body);
+}
+
+.contact-left {
+    flex-basis: 35%;
+}
+
+.contact-right {
+    flex-basis: 60%;
+}
+
+.contact-left p {
+    margin-top: 30px;
+    color: var(--text-secondary);
+    font-size: 1.1em;
+}
+
+.contact-left p i {
+    color: var(--accent-color);
+    margin-right: 15px;
+    font-size: 25px;
+}
+
+/* Social Icons (Inspired by Profile Card) */
+.social-icons {
+    margin-top: 30px;
+    display: flex; /* Use flex for spacing */
+    gap: 15px; /* Space between icons */
+}
+
+.social-icons a {
+    text-decoration: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: var(--border-color); /* Using border-color for consistency */
+    color: var(--text-primary);
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.5s, transform 0.5s, color 0.5s, box-shadow 0.5s;
+    border: 1px solid var(--border-color);
+}
+
+/* Using specific Font Awesome brand colors for hover, if desired */
+.social-icons a:hover {
+    color: var(--text-primary); /* Default white on hover for general */
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px var(--shadow-strong);
+    background-color: var(--accent-dark);
+    border-color: var(--accent-color);
+}
+
+.social-icons a.fab.fa-instagram:hover {
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    box-shadow: 0 8px 20px rgba(220, 50, 100, 0.7);
+    color: white;
+    border-color: transparent;
+}
+
+.social-icons a.fab.fa-linkedin:hover {
+    background: #0077B5;
+    box-shadow: 0 8px 20px rgba(0, 119, 181, 0.7);
+    color: white;
+    border-color: #0077B5;
+}
+
+.social-icons a.fa-brands.fa-github:hover {
+    background: #24292e;
+    box-shadow: 0 8px 20px rgba(36, 41, 46, 0.7);
+    color: white;
+    border-color: #24292e;
+}
+
+.social-icons a.fab.fa-x-twitter:hover {
+    background: #000; /* Black for X (Twitter) */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+    color: #fff;
+    border-color: #000;
+}
+
+
+.btn.btn2 {
+    display: inline-block; /* Keep inline-block for side-by-side with social icons */
+    background: var(--accent-color); /* Solid accent background */
+    color: var(--bg-body); /* Dark text on button */
+    margin-top: 20px;
+    border: 1px solid var(--accent-color);
+    box-shadow: 0 5px 15px var(--shadow-strong);
+}
+
+.btn.btn2:hover {
+    background: var(--accent-dark);
+    color: var(--text-primary);
+    box-shadow: 0 5px 25px var(--shadow-strong);
+}
+
+.contact-right form {
+    width: 100%;
+}
+
+form input,
+form textarea {
+    width: 100%;
+    border: 0;
+    outline: none;
+    background: var(--bg-card); /* Card background for inputs */
+    padding: 15px;
+    margin: 15px 0;
+    color: var(--text-primary);
+    font-size: 18px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+}
+
+form input:focus,
+form textarea:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 8px var(--shadow-light);
+}
+
+form .btn2 {
+    padding: 14px 60px;
+    font-size: 18px;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+.copyright {
+    width: 100%;
+    text-align: center;
+    padding: 25px 0;
+    background: var(--bg-card); /* Darker background for footer */
+    font-weight: 300;
+    margin-top: 20px;
+    font-size: 0.9em;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border-color);
+}
+
+.copyright i {
+    color: red; /* Heart icon color */
+    margin: 0 5px;
+}
+
+/* --- Mobile Navigation --- */
+nav .fas.fa-bars,
+nav .fas.fa-times {
+    display: none; /* Hidden on desktop */
+}
+
+/* --- Responsive Design --- */
+@media only screen and (max-width: 992px) {
+    /* Larger tablets/smaller desktops */
+    .container {
+        padding: 10px 5%;
+    }
+
+    .header-text h1 {
+        font-size: 50px;
+    }
+
+    .sub-title {
+        font-size: 50px;
+    }
+
+    /* About Section */
+    .about-col-1, .about-col-2 {
+        flex-basis: 100%; /* Stack columns */
+        margin-bottom: 30px;
+    }
+    .about-col-1 {
+        text-align: center;
+    }
+    .about-col-1 img {
+        max-width: 350px; /* Constrain image size on smaller screens */
+        margin: 0 auto;
+    }
+    .about-col-2 {
+        padding-left: 0;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    /* Tablets */
+    #header {
+        background-position: 50% 0; /* Adjust background for better view */
+    }
+    .header-text {
+        font-size: 24px;
+        margin-top: 100px; /* Push content down from nav */
+    }
+    .header-text h1 {
+        font-size: 40px;
+    }
+    /* New: Why Work With Me on smaller screens */
+    .why-work-with-me {
+        margin-top: 30px;
+    }
+    .why-work-with-me h2 {
+        font-size: 24px;
+    }
+    .why-work-with-me ul li {
+        font-size: 16px;
+    }
+
+    nav ul {
+        background: var(--bg-card);
+        position: fixed;
+        top: 0;
+        right: -200px; /* Initially off-screen */
+        width: 200px;
+        height: 100vh;
+        padding-top: 50px;
+        z-index: 2000; /* Above everything */
+        transition: right 0.5s;
+        display: block; /* Stack items vertically */
+    }
+
+    nav ul li {
+        display: block;
+        margin: 25px;
+    }
+
+    nav .fas.fa-bars,
+    nav .fas.fa-times {
+        display: block; /* Show menu icons */
+        font-size: 25px;
+        cursor: pointer;
+        color: var(--text-primary);
+    }
+    nav .fas.fa-times {
+        position: absolute;
+        top: 25px;
+        left: 25px;
+    }
+
+    .sub-title {
+        font-size: 40px;
+    }
+
+    .tab-links {
+        font-size: 20px;
+        margin-right: 30px;
+    }
+
+    .contact-left, .contact-right {
+        flex-basis: 100%; /* Stack contact columns */
+    }
+    .contact-left {
+        margin-bottom: 30px;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    /* Smaller phones */
+    .container {
+        padding: 10px 3%;
+    }
+
+    .header-text {
+        font-size: 20px;
+    }
+    .header-text h1 {
+        font-size: 35px;
+    }
+    /* New: Why Work With Me on smaller screens */
+    .why-work-with-me {
+        margin-top: 20px;
+    }
+    .why-work-with-me h2 {
+        font-size: 20px;
+    }
+    .why-work-with-me ul li {
+        font-size: 14px;
+    }
+
+    .sub-title {
+        font-size: 35px;
+    }
+
+    .tab-links {
+        font-size: 18px;
+        margin-right: 20px;
+    }
+
+    .services-list div {
+        padding: 30px;
+    }
+
+    .services-list div h2 {
+        font-size: 24px;
+    }
+
+    .work .layer h3 {
+        font-size: 20px;
+    }
+
+    .contact-left p, .contact-left p i {
+        font-size: 1em;
+    }
+
+    .social-icons {
+        gap: 10px;
+    }
+    .social-icons a {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+
+    form input, form textarea {
+        font-size: 16px;
+    }
+
+    .btn.btn2 {
+        padding: 12px 40px;
+        font-size: 16px;
+    }
 }
